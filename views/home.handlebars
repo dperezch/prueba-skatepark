@@ -19,7 +19,9 @@
       <tr>
         <th scope="row">{{this.id}}</th>
         <td>
-          <div></div>
+          <div
+            style="background-image: url({{this.foto}}); background-size: cover; width: 60px; height: 60px"
+          ></div>
         </td>
         <td>{{this.nombre}}</td>
         <td>{{this.anos_experiencia}}</td>
@@ -33,6 +35,6 @@
       {{/each}}
     </tbody>
   </table>
-  <a href="#">Iniciar Sesión</a> |
-  <a href="#">Registrarme</a>
+  <a href="/login">Iniciar Sesión</a> |
+  <a href="/registro">Registrarme</a>
 </div>
