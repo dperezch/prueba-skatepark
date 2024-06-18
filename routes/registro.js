@@ -1,6 +1,7 @@
 import { Router } from "express";
 import path from "node:path";
-import { addSkater } from "../db/index.js";
+import { SkaterModel } from "../models/skater.js";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 
@@ -25,13 +26,28 @@ router.post("/", async (req, res) => {
     foto: `/photos/${nombreArchivo}`,
   };
 
+
   try {
-    const agregarSkater = await addSkater(nuevoSkater);
+    /* Validación para ver si el email ya existe */
+    const skater = await SkaterModel.skaterExiste(nuevoSkater.email)
+    if (skater) {
+      res.status(400).json({ message: "El usuario ya existe" });
+    }
+    /* Agregar skater */
+    const agregarSkater = await SkaterModel.addSkater(nuevoSkater);
+    const token = jwt.sign({
+      email: agregarSkater.email,
+      nombre: agregarSkater.nombre,
+      experiencia: agregarSkater.experiencia,
+      especialidad: agregarSkater.especialidad,
+    }, process.env.JWT_SECRET, { expiresIn: "1h" })
     await archivo.mv(rutaFotos + "/" + nombreArchivo);
-    res.status(201).send(agregarSkater);
+    res.status(201).json({
+      message: token
+    });
   } catch (error) {
     console.log("hubo un error: " + error);
-    res.status(500).json({ message: "Error al agregar el skater" });
+    res.status(500).json({ message: "Error del servidor" });
   }
 });
 

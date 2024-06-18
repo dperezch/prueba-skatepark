@@ -1,17 +1,17 @@
 import { Router } from "express";
-import { getSkaters } from "../db/index.js";
+import { SkaterModel } from "../models/skater.js";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const skaters = await getSkaters();
-    console.log(skaters);
+    const skaters = await SkaterModel.getSkaters();
+    //console.log(skaters);
     res.render("home", {
       skaters: skaters,
     });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({ message: 'Error del servidor' });
   }
 });
 

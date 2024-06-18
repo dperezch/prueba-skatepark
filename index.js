@@ -20,7 +20,6 @@ app.set("views", "./views");
 app.use(express.json());
 app.use(fileUpload());
 app.use("/photos", express.static("./photos"));
-app.use("/script", express.static("./static"));
 
 /* Rutas */
 app.use("/", home);

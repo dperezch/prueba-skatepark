@@ -22,30 +22,29 @@
     console.log("conectado al login")
 
     const login = document.querySelector("#formulario-login");
-
     login.addEventListener("submit", async (e) => {
         e.preventDefault();
         const { email, password } = e.target;
         console.log(email.value, password.value);
 
-        try {
-            const response = await fetch("/login", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email.value,
-                    password: password.value
-                }),
-            });
-
-        } catch (error) {
-
-            console.log(error);
+        const response = await fetch("/login", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email.value,
+                password: password.value
+            }),
+        })
+        const unauthorizedStatus = [400, 404, 500]
+        if (unauthorizedStatus.includes(response.status)) {
+            alert("Usuario o contraseña incorrectos")
+            return;
         }
-
+        const data = await response.json();
+        sessionStorage.setItem('token', data.message)
+        window.location = `/datos?token=${sessionStorage.getItem('token')}`
     })
-
 
 </script>

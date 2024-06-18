@@ -1,11 +1,18 @@
-import pkg from "pg";
-import { config } from "./config.js";
-import { Usuario } from "../models/usuario.js";
+import pg from "pg";
 
-const { Pool } = pkg;
-const pool = new Pool(config);
+const config = {
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASS,
+  port: process.env.DB_PORT,
+};
 
-const getSkaters = async () => {
+const { Pool } = pg;
+
+export const db = new Pool(config);
+
+/* const getSkaters = async () => {
   try {
     const text = "SELECT * FROM skaters";
     const result = await pool.query(text);
@@ -53,7 +60,7 @@ const addSkater = async ({
       console.log(error);
     }
   }
-};
+}; */
 
 /* const getSkater = async (email, password) => {
   const usuario = new Usuario(email, password);
@@ -77,4 +84,4 @@ const addSkater = async ({
   }
 }; */
 
-export { getSkaters, addSkater };
+
