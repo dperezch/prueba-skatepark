@@ -68,8 +68,39 @@ const skaterExiste = async (email) => {
     }
 }
 
+const updateSkater = async (email, nombre, password, experiencia, especialidad) => {
+    const text = "UPDATE skaters set nombre=$2, password=$3, anos_experiencia=$4, especialidad=$5 WHERE email=$1 RETURNING *"
+    const values = [email, nombre, password, experiencia, especialidad]
+    const queryObject = {
+        text,
+        values
+    }
+    try {
+        const result = await db.query(queryObject)
+        return result.rows[0].email
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const deleteSkater = async (email) => {
+    const text = "DELETE FROM skaters WHERE email=$1"
+    const values = [email]
+    const queryObject = {
+        text,
+        values
+    }
+    try {
+        const result = await db.query(queryObject)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const SkaterModel = {
     getSkaters,
     addSkater,
     skaterExiste,
+    updateSkater,
+    deleteSkater
 }

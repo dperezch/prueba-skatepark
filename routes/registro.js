@@ -32,19 +32,20 @@ router.post("/", async (req, res) => {
     const skater = await SkaterModel.skaterExiste(nuevoSkater.email)
     if (skater) {
       res.status(400).json({ message: "El usuario ya existe" });
+    } else {
+      /* Agregar skater */
+      const agregarSkater = await SkaterModel.addSkater(nuevoSkater);
+      const token = jwt.sign({
+        email: agregarSkater.email,
+        nombre: agregarSkater.nombre,
+        experiencia: agregarSkater.experiencia,
+        especialidad: agregarSkater.especialidad,
+      }, process.env.JWT_SECRET, { expiresIn: "1h" })
+      await archivo.mv(rutaFotos + "/" + nombreArchivo);
+      res.status(201).json({
+        message: token
+      });
     }
-    /* Agregar skater */
-    const agregarSkater = await SkaterModel.addSkater(nuevoSkater);
-    const token = jwt.sign({
-      email: agregarSkater.email,
-      nombre: agregarSkater.nombre,
-      experiencia: agregarSkater.experiencia,
-      especialidad: agregarSkater.especialidad,
-    }, process.env.JWT_SECRET, { expiresIn: "1h" })
-    await archivo.mv(rutaFotos + "/" + nombreArchivo);
-    res.status(201).json({
-      message: token
-    });
   } catch (error) {
     console.log("hubo un error: " + error);
     res.status(500).json({ message: "Error del servidor" });

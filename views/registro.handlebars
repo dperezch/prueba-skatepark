@@ -97,20 +97,18 @@
         formData.append("especialidad", especialidad.value.trim());
         formData.append("foto", foto.files[0]);
 
-        try {
-            const response = await fetch("/registro", {
-                method: "POST",
-                body: formData,
-            });
+        const response = await fetch("/registro", {
+            method: "POST",
+            body: formData,
+        });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+        const data = await response.json();
 
+        if (!response.ok) {
+            alert(`Error: ${data.message}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        } else {
             alert("Registro exitoso");
-        } catch (error) {
-            alert("No se pudo realizar el registro");
-            console.log(error);
         }
 
         /* Limpiar los input */

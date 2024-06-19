@@ -1,8 +1,6 @@
 import { Router } from "express";
 import { Authorization } from "../middlewares/Authorization.js";
 
-
-
 const router = Router();
 
 router.get("/", Authorization, async (req, res) => {
@@ -12,5 +10,7 @@ router.get("/", Authorization, async (req, res) => {
     skater: decoded
   });
 });
+
+
 
 export { router };
