@@ -1,35 +1,61 @@
-
 import { Router } from "express";
 import { SkaterModel } from "../models/skater.js";
 
-const router = Router()
+const router = Router();
 
-router.put('/', async (req, res) => {
-    const payload = req.body
-    console.log("payload desde datos put", payload);
-    try {
-        const actualizarSkater = await SkaterModel.updateSkater(payload)
-        res.status(200).json({
-            message: "Skater actualizado",
-            skater: actualizarSkater,
-        })
-    } catch (error) {
-        console.log("hubo un error: " + error);
-        res.status(500).json({ message: "Error del servidor" });
+router.put("/", async (req, res) => {
+  try {
+    const data = req.body;
+    // Analiza si estado viene vacío y lo define falso
+    if (!data.estado) {
+      data.estado = false;
     }
-})
 
-router.delete('/', async (req, res) => {
-    const { email } = req.body
-    try {
-        const skaterEliminado = await SkaterModel.deleteSkater(email)
-        res.status(200).json({
-            message: "Skater eliminado",
-        })
-    } catch (error) {
-        console.log("hubo un error: " + error);
-        res.status(500).json({ message: "Error del servidor" });
-    }
-})
+    const result = await SkaterModel.updateSkater(data);
+
+    console.log("RESULT", result);
+    res.json({
+      message: "Updated skater",
+      skater: result.rows,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+    console.error(error);
+  }
+});
+
+router.put("/status", async (req, res) => {
+  try {
+    const data = req.body;
+    const result = await SkaterModel.updateSkaterStatus(data);
+
+    res.json({
+      message: `Updater user status`,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+    console.error(error);
+  }
+});
+
+router.delete("/", async (req, res) => {
+  try {
+    const data = req.query;
+    const result = await SkaterModel.deleteStaker(data);
+
+    res.json({
+      message: `Deleted user with mail ${data.email}`,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal Server Error",
+    });
+    console.error(error);
+  }
+});
 
 export { router };

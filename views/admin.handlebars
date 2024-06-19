@@ -1,3 +1,5 @@
+<h1>Skate Park</h1>
+
 <div class="py-4">
     <h2>Administración</h2>
     <hr class="w-50" />
@@ -14,36 +16,50 @@
             </tr>
         </thead>
         <tbody>
+            {{#each skaters}}
             <tr>
-                <th scope="row">1</th>
+                <th scope="row">{{this.id}}</th>
                 <td>
-                    <div></div>
+                    <div
+                        style="background-image: url({{this.foto}}); background-size: cover; width: 60px; height: 60px">
+                    </div>
                 </td>
-                <td>Tony Hawk</td>
-                <td>12</td>
-                <td>Kickflip</td>
-                <td><input type="checkbox" checked /></td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
+                <td>{{this.nombre}}</td>
+                <td>{{this.anos_experiencia}}</td>
+                <td>{{this.especialidad}}</td>
                 <td>
-                    <div></div>
+                    <input type="checkbox" {{#if this.estado}} checked {{/if}}
+                        onclick="handleChange({{this.id}}, this)" />
                 </td>
-                <td>Evelien Bouilliart</td>
-                <td>10</td>
-                <td>Heelflip</td>
-                <td><input type="checkbox" checked /></td>
             </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>
-                    <div></div>
-                </td>
-                <td>Danny Way</td>
-                <td>8</td>
-                <td>Ollie</td>
-                <td><input type="checkbox" /></td>
-            </tr>
+            {{/each}}
         </tbody>
     </table>
 </div>
+
+<script>
+    /** función toma el elemento que inició el event,
+     *  junto con el id del skater para actualizarlo en la DB
+     */
+    async function handleChange(id, event) {
+        const estado = event.checked // revisa si el checkbox está seleccionado o no
+
+        const result = await fetch("/skaters/status", {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: id,
+                estado: estado
+            })
+        })
+
+        const data = await result.json()
+
+        if (result.status == 500) {
+            alert('Problemas actualizando estado')
+            return
+        }
+    }
+</script>

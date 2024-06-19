@@ -7,7 +7,8 @@ import { router as home } from "./routes/index.js";
 import { router as registro } from "./routes/registro.js";
 import { router as login } from "./routes/login.js";
 import { router as datos } from "./routes/datos.js";
-import { router as skaters } from "./routes/skaters.js"
+import { router as skaters } from "./routes/skaters.js";
+import { router as admin } from "./routes/admin.js";
 
 const app = express();
 const hbs = create();
@@ -28,7 +29,7 @@ app.use("/registro", registro);
 app.use("/login", login);
 app.use("/datos", datos);
 app.use("/skaters", skaters);
-
+app.use("/admin", admin);
 
 app.listen(3000, () => {
   console.log("App listening on port 3000");
